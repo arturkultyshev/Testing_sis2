@@ -1,0 +1,14 @@
+{
+  "installation": "npm ci --offline (including postinstall browser installation)",
+  "testCommand": "npm test -- --workers=1",
+  "nodeVersion": "v25.6.1",
+  "stats": {
+    "startTime": "2026-10-17T06:32:35.394Z",
+    "duration": 18392.02,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "exitCode": 0
+}

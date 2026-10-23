@@ -1,0 +1,13 @@
+{
+  "runStartedAt": "2026-10-17T06:29:55.428Z",
+  "stats": {
+    "startTime": "2026-10-17T06:29:55.428Z",
+    "duration": 41017.814,
+    "expected": 15,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "observedFailure": "One repeated LOGIN-01 navigation timed out waiting for the load event after 30 seconds.",
+  "correction": "Navigate until DOMContentLoaded and then wait for the actual form through retrying assertions."
+}

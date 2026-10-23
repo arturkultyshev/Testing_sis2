@@ -1,0 +1,203 @@
+{
+  "generatedFrom": "Playwright JSON reporter, test-results/results.json",
+  "runStartedAt": "2026-10-17T06:31:24.993Z",
+  "runStartedAtAlmaty": "17 October 2026 at 11:31:24 GMT+5",
+  "durationMs": 14538.051,
+  "nodeVersion": "v25.6.1",
+  "playwrightVersion": "1.64.1",
+  "workers": 3,
+  "stats": {
+    "startTime": "2026-10-17T06:31:24.993Z",
+    "duration": 14538.051,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "id": "BUY-01",
+      "title": "BUY-01: two units reach the cart with correct totals and a confirmed order",
+      "file": "tests/buy-product.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 6293,
+      "attempts": 1,
+      "screenshot": "screenshots/BUY-01.png"
+    },
+    {
+      "id": "BUY-01",
+      "title": "BUY-01: two units reach the cart with correct totals and a confirmed order",
+      "file": "tests/buy-product.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 5479,
+      "attempts": 1
+    },
+    {
+      "id": "COMPARE-01",
+      "title": "COMPARE-01: Combination Pliers cost more than Pliers",
+      "file": "tests/compare-products.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2547,
+      "attempts": 1,
+      "screenshot": "screenshots/COMPARE-01.png"
+    },
+    {
+      "id": "COMPARE-01",
+      "title": "COMPARE-01: Combination Pliers cost more than Pliers",
+      "file": "tests/compare-products.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2177,
+      "attempts": 1
+    },
+    {
+      "id": "LOGIN-01",
+      "title": "LOGIN-01: valid credentials open the account page",
+      "file": "tests/login.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2646,
+      "attempts": 1,
+      "screenshot": "screenshots/LOGIN-01.png"
+    },
+    {
+      "id": "LOGIN-02",
+      "title": "LOGIN-02: an incorrect password shows an error and keeps the customer signed out",
+      "file": "tests/login.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2437,
+      "attempts": 1,
+      "screenshot": "screenshots/LOGIN-02.png"
+    },
+    {
+      "id": "LOGIN-01",
+      "title": "LOGIN-01: valid credentials open the account page",
+      "file": "tests/login.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2505,
+      "attempts": 1
+    },
+    {
+      "id": "LOGIN-02",
+      "title": "LOGIN-02: an incorrect password shows an error and keeps the customer signed out",
+      "file": "tests/login.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2358,
+      "attempts": 1
+    },
+    {
+      "id": "REG-01",
+      "title": "REG-01: a unique new customer can register and then sign in",
+      "file": "tests/register.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2275,
+      "attempts": 1,
+      "screenshot": "screenshots/REG-01.png"
+    },
+    {
+      "id": "REG-01",
+      "title": "REG-01: a unique new customer can register and then sign in",
+      "file": "tests/register.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 2698,
+      "attempts": 1
+    },
+    {
+      "id": "RESET-01",
+      "title": "RESET-01: a known email receives the reset confirmation",
+      "file": "tests/reset-password.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 1932,
+      "attempts": 1,
+      "screenshot": "screenshots/RESET-01.png"
+    },
+    {
+      "id": "RESET-02",
+      "title": "RESET-02: an unknown email receives an explicit error",
+      "file": "tests/reset-password.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 938,
+      "attempts": 1,
+      "screenshot": "screenshots/RESET-02.png"
+    },
+    {
+      "id": "RESET-03",
+      "title": "RESET-03: a malformed email is rejected before a reset can be submitted",
+      "file": "tests/reset-password.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 0,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 747,
+      "attempts": 1,
+      "screenshot": "screenshots/RESET-03.png"
+    },
+    {
+      "id": "RESET-01",
+      "title": "RESET-01: a known email receives the reset confirmation",
+      "file": "tests/reset-password.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 1834,
+      "attempts": 1
+    },
+    {
+      "id": "RESET-02",
+      "title": "RESET-02: an unknown email receives an explicit error",
+      "file": "tests/reset-password.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 899,
+      "attempts": 1
+    },
+    {
+      "id": "RESET-03",
+      "title": "RESET-03: a malformed email is rejected before a reset can be submitted",
+      "file": "tests/reset-password.spec.ts",
+      "project": "chromium",
+      "repeatIndex": 1,
+      "status": "passed",
+      "outcome": "expected",
+      "durationMs": 695,
+      "attempts": 1
+    }
+  ]
+}
