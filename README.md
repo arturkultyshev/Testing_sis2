@@ -106,16 +106,5 @@ The public demo can change its catalogue, validation rules or markup. Treat a fa
 
 The local project is ready to be uploaded as a **public** GitHub repository after you review it. Include code, the lockfile, the three required Markdown files, screenshots and evidence. Exclude everything listed in `.gitignore`.
 
-After creating an empty public repository on GitHub, use the actual repository URL in these commands:
+Verify the public link opens without authentication and that installation/run instructions work from a fresh clone. 
 
-```sh
-git init -b main
-git add .
-git commit -m "Add SIS 2 Playwright automation and evidence"
-git remote add origin YOUR_REPOSITORY_URL
-git push -u origin main
-```
-
-Verify the public link opens without authentication and that installation/run instructions work from a fresh clone. Submit the link through the [course Google Form](https://docs.google.com/forms/d/e/1FAIpQLSeG3uxaPlfoz9ECk9a46oP2qo4d-mm9g5LjeTKrUIpSRMDnxw/viewform?usp=publish-editor).
-
-The repository URL and course submission are not created by these instructions themselves.
