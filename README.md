@@ -165,3 +165,13 @@ These local shards run sequentially to validate report merging, not to measure C
 7. Merge the passing PR and confirm the badge displays the `main` result.
 
 CI assistance and exact follow-up prompts are recorded in [CI-AI.md](CI-AI.md).
+
+### Hosted validation on 16 November 2026
+
+- [Pull request #1](https://github.com/arturkultyshev/Testing_sis2/pull/1).
+- [Feature-branch push run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882263092): four shards executed, npm and Chromium installation succeeded, report merging succeeded, and all ten artifacts were uploaded. GitHub's artifact metadata confirms approximately 14 days for HTML, JUnit and per-shard results.
+- [Separate pull-request run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882604356).
+
+**Current blocker:** on the hosted push run, the public demo served a Cloudflare “Performing security verification” page in place of the catalogue. BUY-01 timed out waiting for `search-query`; the downloaded error context confirms that security page. Other shards also reported test failures. The same eight tests passed locally. This is an environment access problem; assertions have not been weakened and the bot protection has not been bypassed. The hosted run is not a passing submission.
+
+To obtain a stable passing run, use an authorized compatible deployment reachable from GitHub or explicitly configure a trusted self-hosted runner on the student's machine. The latter means repository workflows execute on that machine and needs a separate setup decision. Runtime comparison and the passing main badge remain pending until the environment is resolved. Retry traces are present in `test-results-1` from the failed push run, providing real failure evidence.
