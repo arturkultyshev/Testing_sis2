@@ -43,3 +43,15 @@ Push run: https://github.com/arturkultyshev/Testing_sis2/actions/runs/4388226309
 PR run: https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882604356
 
 The push run installed dependencies and Chromium successfully and ran four shards. Three shards failed business tests. Merge reports succeeded despite those failures, and all ten artifacts were uploaded. API metadata verifies approximately 14-day expiry for final reports/results. Downloaded the real `test-results-1` artifact: its error context shows Cloudflare's “Performing security verification” page rather than the product catalogue. Retry trace ZIPs are present. No Cloudflare bypass or weakening of test assertions was attempted. Passing hosted runs, main badge, baseline timings and cache evidence are still pending. Asked the student to choose between a separately configured self-hosted runner, another compatible authorized deployment, or retaining the documented blocker.
+
+## Exact follow-up requests
+
+```text
+что сказано в инструкции?
+```
+
+```text
+сделать надо ровно по инструкции в файле 
+```
+
+Following this clarification, removed the manual shard-count input and used the guide's literal matrix. A temporary `[1]` / `[1]` baseline commit is followed by restoration of `[1, 2, 3, 4]` / `[4]`. No self-hosted runner or alternative target is configured. The earlier PR run was cancelled by the subsequent push; the completed PR evidence is https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882915937 (failed).

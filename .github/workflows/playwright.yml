@@ -4,12 +4,6 @@ on:
   push:
   pull_request:
   workflow_dispatch:
-    inputs:
-      shards:
-        description: Number of shards for runtime comparison
-        type: choice
-        options: ['4', '1']
-        default: '4'
 
 permissions:
   contents: read
@@ -26,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: ${{ fromJSON(inputs.shards == '1' && '[1]' || '[1,2,3,4]') }}
-        shardTotal: ${{ fromJSON(inputs.shards == '1' && '[1]' || '[4]') }}
+        shardIndex: [1]
+        shardTotal: [1]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

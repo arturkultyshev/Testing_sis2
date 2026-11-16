@@ -129,7 +129,7 @@ The default demo needs no secrets or variables. For another compatible environme
 | 1 shard + merge | Not measured on GitHub yet | Not measured | Pending |
 | 4 shards + merge | Not measured on GitHub yet | Not measured | Pending |
 
-Use Actions → Playwright Tests → Run workflow, choosing `shards: 1` for the baseline and `shards: 4` for the parallel variant. This keeps the test suite, workers, setup and merge job identical. Manual dispatch becomes available after the workflow is present on the default branch. Run each variant three times, record the median total duration and the median slowest test-step duration, and replace the pending cells with real values and links. No performance improvement is claimed before those measurements; with eight short tests, installation and merging may dominate.
+As required by the guide, measure the baseline with matrix `shardIndex: [1]` and `shardTotal: [1]`, then restore `[1, 2, 3, 4]` and `[4]` for the final workflow. Both measurements must come from GitHub Actions. Repeat each variant 2–3 times and take the median when the environment is stable. Record total duration and the Run Playwright tests step duration (slowest shard).
 
 ### Local CI check
 
@@ -170,8 +170,8 @@ CI assistance and exact follow-up prompts are recorded in [CI-AI.md](CI-AI.md).
 
 - [Pull request #1](https://github.com/arturkultyshev/Testing_sis2/pull/1).
 - [Feature-branch push run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882263092): four shards executed, npm and Chromium installation succeeded, report merging succeeded, and all ten artifacts were uploaded. GitHub's artifact metadata confirms approximately 14 days for HTML, JUnit and per-shard results.
-- [Separate pull-request run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882604356).
+- [Separate pull-request run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882915937).
 
 **Current blocker:** on the hosted push run, the public demo served a Cloudflare “Performing security verification” page in place of the catalogue. BUY-01 timed out waiting for `search-query`; the downloaded error context confirms that security page. Other shards also reported test failures. The same eight tests passed locally. This is an environment access problem; assertions have not been weakened and the bot protection has not been bypassed. The hosted run is not a passing submission.
 
-To obtain a stable passing run, use an authorized compatible deployment reachable from GitHub or explicitly configure a trusted self-hosted runner on the student's machine. The latter means repository workflows execute on that machine and needs a separate setup decision. Runtime comparison and the passing main badge remain pending until the environment is resolved. Retry traces are present in `test-results-1` from the failed push run, providing real failure evidence.
+The implementation follows the guide’s GitHub-hosted `ubuntu-latest` workflow. A passing hosted run, runtime comparison and the main badge remain incomplete while the target site blocks access. No self-hosted runner or alternate target is configured. Retry traces are present in `test-results-1` from the failed push run, providing real failure evidence.
