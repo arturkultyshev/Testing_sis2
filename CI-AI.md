@@ -55,3 +55,9 @@ The push run installed dependencies and Chromium successfully and ran four shard
 ```
 
 Following this clarification, removed the manual shard-count input and used the guide's literal matrix. A temporary `[1]` / `[1]` baseline commit is followed by restoration of `[1, 2, 3, 4]` / `[4]`. No self-hosted runner or alternative target is configured. The earlier PR run was cancelled by the subsequent push; the completed PR evidence is https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882915937 (failed).
+
+## Verification after the instruction clarification
+
+Clean `npm ci` passed (7 packages, no vulnerabilities reported). `npx playwright install --with-deps chromium` passed. TypeScript passed again after that clean install. Normal local run: all 8 tests passed in 8.3 seconds. The completed PR run 43882915937, shard-4 job 133353418487, reports `Cache restored successfully` and `Cache restored from key` in setup-node, verifying the cache requirement. The final implementation will retain the guide's literal four-shard matrix, without manual shard inputs or a self-hosted runner.
+
+The literal one-shard baseline (commit 5d520f0, push run 43883553681) completed with failure; the merge job still produced reports. Restored the literal four-shard matrix. README contains actual GitHub diagnostic durations and run links, explicitly marked failed and not a valid performance conclusion. No median of three runs is claimed. A green run and passing main badge remain blocked by the public target's Cloudflare challenge; main has not been merged with a known failing workflow.

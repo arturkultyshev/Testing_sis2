@@ -126,8 +126,10 @@ The default demo needs no secrets or variables. For another compatible environme
 
 | Configuration | Total run time | Run tests step (slowest shard) | Run |
 | --- | --- | --- | --- |
-| 1 shard + merge | Not measured on GitHub yet | Not measured | Pending |
-| 4 shards + merge | Not measured on GitHub yet | Not measured | Pending |
+| 1 shard + merge (failed) | 3 min 23 s | 2 min 1 s | [run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43883553681) |
+| 4 shards + merge (failed) | 2 min 45 s | 1 min 3 s | [run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882905840) |
+
+**Conclusion:** these are single failed diagnostic runs affected by Cloudflare challenges and retries, so their durations do not establish a performance improvement. A valid comparison of passing runs remains required. Total duration is calculated from run_started_at to the completed run’s updated_at in GitHub metadata.
 
 As required by the guide, measure the baseline with matrix `shardIndex: [1]` and `shardTotal: [1]`, then restore `[1, 2, 3, 4]` and `[4]` for the final workflow. Both measurements must come from GitHub Actions. Repeat each variant 2–3 times and take the median when the environment is stable. Record total duration and the Run Playwright tests step duration (slowest shard).
 
@@ -154,15 +156,17 @@ npx playwright show-report
 
 These local shards run sequentially to validate report merging, not to measure CI speed. Docker and `act` are optional additional checks; the final evidence must come from GitHub Actions.
 
-### Submission evidence still required
+### Submission checklist
 
-1. Push the workflow on a feature branch and open a PR into `main`; retain separate push and PR run links.
-2. Confirm the second run restores the npm cache in the setup-node log.
-3. Confirm the run graph has four shards and the merge job; download the HTML and per-shard artifacts.
-4. Temporarily use `test.only` on a diagnostic branch and confirm CI rejects it, then revert the change. Keep that failed run link.
-5. Open a real retry trace when available; a successful first attempt creates none. If needed, demonstrate tracing with an explicitly documented temporary failing diagnostic test and then remove it.
-6. Fill the runtime table using real Actions runs and write a conclusion based on the measurements.
-7. Merge the passing PR and confirm the badge displays the `main` result.
+- [x] Separate feature-branch push and PR runs exist (links below).
+- [x] The second completed PR run restores npm cache: setup-node reports `Cache restored successfully` in [shard 4](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43882915937/job/133353418487).
+- [x] Browser installation and unfiltered suite execution appear in the hosted logs.
+- [x] Four hosted shards and a successful Merge reports job are present; HTML, per-shard results and JUnit artifacts exist with 14-day retention.
+- [x] CI enables forbidOnly, retries and JUnit; a temporary local test.only was rejected, then removed.
+- [x] Real first-retry trace ZIP exists in the failed hosted run's downloaded test-results-1 artifact. Interactive trace viewing still needs verification.
+- [ ] A passing hosted full-suite run.
+- [ ] Valid before/after performance conclusion from successful GitHub runs.
+- [ ] Merge the passing PR and verify the main badge.
 
 CI assistance and exact follow-up prompts are recorded in [CI-AI.md](CI-AI.md).
 
