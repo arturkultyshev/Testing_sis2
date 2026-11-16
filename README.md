@@ -108,3 +108,60 @@ The local project is ready to be uploaded as a **public** GitHub repository afte
 
 Verify the public link opens without authentication and that installation/run instructions work from a fresh clone. 
 
+## CI
+
+[![Playwright Tests](https://github.com/arturkultyshev/Testing_sis2/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/arturkultyshev/Testing_sis2/actions/workflows/playwright.yml)
+
+**CI system:** GitHub Actions, because this repository already lives on GitHub and Actions supports parallel matrix jobs, npm caching and downloadable reports without maintaining a server.
+
+The pipeline in `.github/workflows/playwright.yml` runs on every push and pull request, without branch filters. It uses Node.js 22, `setup-node` with `cache: npm`, `npm ci`, and `npx playwright install --with-deps chromium`. The complete suite runs across four parallel shards without test or project filters. `fail-fast: false` lets other shards finish if one fails. A dependent job merges blob reports into one HTML report and JUnit XML even after a test failure, unless the run is cancelled.
+
+With `CI=true`, the configuration enables `forbidOnly`, two retries, two workers, and the list, blob and JUnit reporters. Traces are recorded on the first retry, screenshots on failure, and failed-test videos are retained. Fully passing tests normally have no trace.
+
+**Artifacts:** `playwright-report` contains the merged HTML report; `test-results-1` through `test-results-4` contain per-shard results and JUnit; `junit-report` contains the merged XML. These are retained for **14 days**. Intermediate `blob-report-N` artifacts last one day. Repository retention settings must allow at least 7 days. Download and extract the HTML artifact and open it with `npx playwright show-report <folder>`; open a downloaded trace with `npx playwright show-trace <trace.zip>`.
+
+The default demo needs no secrets or variables. For another compatible environment, set both `BASE_URL` and `API_URL` in Settings → Secrets and variables → Actions → Variables. Do not put credentials in this workflow.
+
+### Runtime
+
+| Configuration | Total run time | Run tests step (slowest shard) | Run |
+| --- | --- | --- | --- |
+| 1 shard + merge | Not measured on GitHub yet | Not measured | Pending |
+| 4 shards + merge | Not measured on GitHub yet | Not measured | Pending |
+
+Use Actions → Playwright Tests → Run workflow, choosing `shards: 1` for the baseline and `shards: 4` for the parallel variant. This keeps the test suite, workers, setup and merge job identical. Manual dispatch becomes available after the workflow is present on the default branch. Run each variant three times, record the median total duration and the median slowest test-step duration, and replace the pending cells with real values and links. No performance improvement is claimed before those measurements; with eight short tests, installation and merging may dominate.
+
+### Local CI check
+
+```sh
+npm ci
+npx playwright install --with-deps chromium
+npm run typecheck
+CI=true npx playwright test
+```
+
+To check all four shards and merging locally (bash/zsh), start with an empty `all-blob-reports` directory:
+
+```sh
+mkdir -p all-blob-reports
+for shard in 1 2 3 4; do
+  CI=true npx playwright test --shard="$shard/4" || exit 1
+  cp blob-report/*.zip all-blob-reports/
+done
+npx playwright merge-reports --config merge.config.ts ./all-blob-reports
+npx playwright show-report
+```
+
+These local shards run sequentially to validate report merging, not to measure CI speed. Docker and `act` are optional additional checks; the final evidence must come from GitHub Actions.
+
+### Submission evidence still required
+
+1. Push the workflow on a feature branch and open a PR into `main`; retain separate push and PR run links.
+2. Confirm the second run restores the npm cache in the setup-node log.
+3. Confirm the run graph has four shards and the merge job; download the HTML and per-shard artifacts.
+4. Temporarily use `test.only` on a diagnostic branch and confirm CI rejects it, then revert the change. Keep that failed run link.
+5. Open a real retry trace when available; a successful first attempt creates none. If needed, demonstrate tracing with an explicitly documented temporary failing diagnostic test and then remove it.
+6. Fill the runtime table using real Actions runs and write a conclusion based on the measurements.
+7. Merge the passing PR and confirm the badge displays the `main` result.
+
+CI assistance and exact follow-up prompts are recorded in [CI-AI.md](CI-AI.md).
