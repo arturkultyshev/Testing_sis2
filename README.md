@@ -106,5 +106,32 @@ The public demo can change its catalogue, validation rules or markup. Treat a fa
 
 The local project is ready to be uploaded as a **public** GitHub repository after you review it. Include code, the lockfile, the three required Markdown files, screenshots and evidence. Exclude everything listed in `.gitignore`.
 
-Verify the public link opens without authentication and that installation/run instructions work from a fresh clone. 
+Verify the public link opens without authentication and that installation/run instructions work from a fresh clone.
 
+## CI with Jenkins
+
+Jenkins runs on the local Docker Desktop host. On GitHub-hosted runners the public Toolshop site sometimes returned a Cloudflare verification page instead of the application ([observed run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43884230199)). Jenkins runs the same eight tests and assertions from a different execution environment. The browser and Linux dependencies are installed into the image, and npm reuses its package cache between builds.
+
+Start the service with Node.js and Docker Desktop:
+
+```sh
+node -e 'require("fs").writeFileSync("jenkins/.env", "SIS2_JENKINS_PASSWORD=" + require("crypto").randomBytes(24).toString("hex") + "\n", { mode: 0o600, flag: "wx" })'
+docker compose --env-file jenkins/.env -p sis2-jenkins -f jenkins/compose.yml up -d --build
+```
+
+Generate the password file once, then reuse it. Open http://localhost:8090 and sign in as `sis2-admin` using the password in `jenkins/.env`. The instance has four executors, requires login and binds only to localhost. Keep the password file local.
+
+Create a **Multibranch Pipeline**, add **GitHub** as a branch source and select the repository. Discover branches and pull requests from this repository. Enable **Periodically if not otherwise run** under scan triggers. Jenkins uses periodic indexing to discover new branches and PRs; the Jenkinsfile polls existing job revisions every five minutes. No inbound webhook to localhost is necessary. Run trusted branch and PR code only on this local instance.
+
+The default build runs four shards in parallel in separate Jenkins workspaces in the Playwright-enabled Jenkins container. Each shard uses `npm ci` and runs its share of the full Chromium suite, with no filters. The merge step runs after the shards finish even if tests fail. JUnit is published in Jenkins, and per-shard results (including first-retry traces if generated), merged HTML and merged JUnit are archived for 14 days. Download the HTML report artifact and open it with `npx playwright show-report <folder>`.
+
+For the runtime comparison, use **Build with Parameters** for the same revision with `SHARDS=1` and `SHARDS=4`. Record the build duration and the slowest shard's timed test command, with links or screenshots. Repeat each variant and report the median if possible. A direct badge endpoint for the Jenkins main job is available via **Embeddable Build Status** after the job exists. Because Jenkins is bound to localhost, external GitHub visitors cannot load that badge; submit screenshots of the main status, Stage View and artifacts as the guide specifies.
+
+| Configuration | Total time | Slowest test step | Build |
+| --- | --- | --- | --- |
+| 1 shard | 26.37 s | 16.76 s | [Jenkins #3](http://127.0.0.1:8090/job/SIS2-Playwright/3/) |
+| 4 shards | 28.02 s | 7.72 s | [Jenkins #4](http://127.0.0.1:8090/job/SIS2-Playwright/4/) |
+
+Both Jenkins builds passed all eight tests on revision `d332e66`. Four shards cut the slowest test step from 16.76 s to 7.72 s, but total time increased by 1.65 s on this sample. Checkout, setup and report merging are part of elapsed build time. These are single builds on one machine, not median timings. No Cloudflare challenge interrupted these two builds. The links above work only on the local Jenkins host; [build #4 artifacts](http://127.0.0.1:8090/job/SIS2-Playwright/4/artifact/) include the merged HTML and four shard JUnit files.
+
+Jenkins Multibranch detected the branch and reached [PR #2](https://github.com/arturkultyshev/Testing_sis2/pull/2) during indexing. The scan paused on the anonymous GitHub API quota. The main badge still needs a successful build after merge. AI use is recorded in [CI-AI.md](CI-AI.md).
