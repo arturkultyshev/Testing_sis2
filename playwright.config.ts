@@ -1,14 +1,20 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const isCI = !!process.env.CI;
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : 3,
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 2 : 3,
   timeout: 60_000,
   expect: { timeout: 15_000 },
-  reporter: [
+  reporter: isCI ? [
+    ['list'],
+    ['blob'],
+    ['junit', { outputFile: 'reports/junit.xml' }],
+  ] : [
     ['list'],
     ['html', { open: 'never' }],
     ['json', { outputFile: 'test-results/results.json' }],
@@ -20,6 +26,7 @@ export default defineConfig({
     navigationTimeout: 30_000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
     viewport: { width: 1440, height: 1000 },
     locale: 'en-US',
   },

@@ -106,5 +106,28 @@ The public demo can change its catalogue, validation rules or markup. Treat a fa
 
 The local project is ready to be uploaded as a **public** GitHub repository after you review it. Include code, the lockfile, the three required Markdown files, screenshots and evidence. Exclude everything listed in `.gitignore`.
 
-Verify the public link opens without authentication and that installation/run instructions work from a fresh clone. 
+Verify the public link opens without authentication and that installation/run instructions work from a fresh clone.
 
+## CI with Jenkins
+
+Jenkins runs on the local Docker Desktop host. On GitHub-hosted runners the public Toolshop site sometimes returned a Cloudflare verification page instead of the application ([observed run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43884230199)). Jenkins runs the same eight tests and assertions from a different execution environment. The browser and Linux dependencies are installed into the image, and npm reuses its package cache between builds.
+
+Start the service with:
+
+```sh
+docker compose -p sis2-jenkins -f jenkins/compose.yml up -d --build
+docker compose -p sis2-jenkins -f jenkins/compose.yml exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+Open http://localhost:8090 and finish the initial setup. Under **Manage Jenkins → Nodes → Built-In Node → Configure**, set the number of executors to at least four. Create a **Multibranch Pipeline**, add **GitHub** as a branch source and select the repository. Discover branches and pull requests from this repository. Enable **Periodically if not otherwise run** under scan triggers. Jenkins uses periodic indexing to discover new branches and PRs; the Jenkinsfile polls existing job revisions every five minutes. No inbound webhook to localhost is necessary. Run trusted branch and PR code only on this local instance.
+
+The default build runs four shards in parallel in separate Jenkins workspaces in the Playwright-enabled Jenkins container. Each shard uses `npm ci` and runs its share of the full Chromium suite, with no filters. The merge step runs after the shards finish even if tests fail. JUnit is published in Jenkins, and per-shard results (including first-retry traces if generated), merged HTML and merged JUnit are archived for 14 days. Download the HTML report artifact and open it with `npx playwright show-report <folder>`.
+
+For the runtime comparison, use **Build with Parameters** for the same revision with `SHARDS=1` and `SHARDS=4`. Record the build duration and the slowest shard's timed test command, with links or screenshots. Repeat each variant and report the median if possible. A direct badge endpoint for the Jenkins main job is available via **Embeddable Build Status** after the job exists. Because Jenkins is bound to localhost, external GitHub visitors cannot load that badge; submit screenshots of the main status, Stage View and artifacts as the guide specifies.
+
+| Configuration | Total time | Slowest test step | Build |
+| --- | --- | --- | --- |
+| 1 shard | Pending | Pending | Pending |
+| 4 shards | Pending | Pending | Pending |
+
+Jenkins setup, push/PR discovery and measured runtime are only confirmed once actual Jenkins builds have run. AI use is recorded in [CI-AI.md](CI-AI.md).

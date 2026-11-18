@@ -1,0 +1,12 @@
+services:
+  jenkins:
+    build:
+      context: ..
+      dockerfile: jenkins/Dockerfile
+    ports:
+      - "127.0.0.1:8090:8080"
+    shm_size: 1gb
+    volumes:
+      - jenkins-home:/var/jenkins_home
+volumes:
+  jenkins-home:
