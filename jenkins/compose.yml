@@ -5,8 +5,13 @@ services:
       dockerfile: jenkins/Dockerfile
     ports:
       - "127.0.0.1:8090:8080"
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+      CASC_JENKINS_CONFIG: /etc/jenkins/sis2.yaml
+      SIS2_JENKINS_PASSWORD: "${SIS2_JENKINS_PASSWORD:?Generate jenkins/.env first}"
     shm_size: 1gb
     volumes:
+      - ./jenkins.yaml:/etc/jenkins/sis2.yaml:ro
       - jenkins-home:/var/jenkins_home
 volumes:
   jenkins-home:

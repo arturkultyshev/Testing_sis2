@@ -112,14 +112,16 @@ Verify the public link opens without authentication and that installation/run in
 
 Jenkins runs on the local Docker Desktop host. On GitHub-hosted runners the public Toolshop site sometimes returned a Cloudflare verification page instead of the application ([observed run](https://github.com/arturkultyshev/Testing_sis2/actions/runs/43884230199)). Jenkins runs the same eight tests and assertions from a different execution environment. The browser and Linux dependencies are installed into the image, and npm reuses its package cache between builds.
 
-Start the service with:
+Start the service with Node.js and Docker Desktop:
 
 ```sh
-docker compose -p sis2-jenkins -f jenkins/compose.yml up -d --build
-docker compose -p sis2-jenkins -f jenkins/compose.yml exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+node -e 'require("fs").writeFileSync("jenkins/.env", "SIS2_JENKINS_PASSWORD=" + require("crypto").randomBytes(24).toString("hex") + "\n", { mode: 0o600, flag: "wx" })'
+docker compose --env-file jenkins/.env -p sis2-jenkins -f jenkins/compose.yml up -d --build
 ```
 
-Open http://localhost:8090 and finish the initial setup. Under **Manage Jenkins → Nodes → Built-In Node → Configure**, set the number of executors to at least four. Create a **Multibranch Pipeline**, add **GitHub** as a branch source and select the repository. Discover branches and pull requests from this repository. Enable **Periodically if not otherwise run** under scan triggers. Jenkins uses periodic indexing to discover new branches and PRs; the Jenkinsfile polls existing job revisions every five minutes. No inbound webhook to localhost is necessary. Run trusted branch and PR code only on this local instance.
+Generate the password file once, then reuse it. Open http://localhost:8090 and sign in as `sis2-admin` using the password in `jenkins/.env`. The instance has four executors, requires login and binds only to localhost. Keep the password file local.
+
+Create a **Multibranch Pipeline**, add **GitHub** as a branch source and select the repository. Discover branches and pull requests from this repository. Enable **Periodically if not otherwise run** under scan triggers. Jenkins uses periodic indexing to discover new branches and PRs; the Jenkinsfile polls existing job revisions every five minutes. No inbound webhook to localhost is necessary. Run trusted branch and PR code only on this local instance.
 
 The default build runs four shards in parallel in separate Jenkins workspaces in the Playwright-enabled Jenkins container. Each shard uses `npm ci` and runs its share of the full Chromium suite, with no filters. The merge step runs after the shards finish even if tests fail. JUnit is published in Jenkins, and per-shard results (including first-retry traces if generated), merged HTML and merged JUnit are archived for 14 days. Download the HTML report artifact and open it with `npx playwright show-report <folder>`.
 

@@ -1,0 +1,11 @@
+jenkins:
+  numExecutors: 4
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "sis2-admin"
+          password: "${SIS2_JENKINS_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
