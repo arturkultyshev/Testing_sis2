@@ -12,6 +12,7 @@ pipeline {
   }
   environment {
     CI = 'true'
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = '1'
     NPM_CONFIG_CACHE = "${env.JENKINS_HOME}/npm-cache"
   }
   stages {
@@ -26,7 +27,8 @@ pipeline {
               node {
                 deleteDir()
                 checkout scm
-                sh 'npm ci && npx playwright install chromium'
+                sh 'npm ci'
+                sh 'npx playwright install --dry-run chromium'
                 try {
                   sh "bash -c 'time npx playwright test --shard=${shard}/${total}'"
                 } finally {
