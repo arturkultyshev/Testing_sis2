@@ -129,7 +129,9 @@ For the runtime comparison, use **Build with Parameters** for the same revision 
 
 | Configuration | Total time | Slowest test step | Build |
 | --- | --- | --- | --- |
-| 1 shard | Pending | Pending | Pending |
-| 4 shards | Pending | Pending | Pending |
+| 1 shard | 26.37 s | 16.76 s | [Jenkins #3](http://127.0.0.1:8090/job/SIS2-Playwright/3/) |
+| 4 shards | 28.02 s | 7.72 s | [Jenkins #4](http://127.0.0.1:8090/job/SIS2-Playwright/4/) |
 
-Jenkins setup, push/PR discovery and measured runtime are only confirmed once actual Jenkins builds have run. AI use is recorded in [CI-AI.md](CI-AI.md).
+Both Jenkins builds passed all eight tests on revision `d332e66`. Four shards cut the slowest test step from 16.76 s to 7.72 s, but total time increased by 1.65 s on this sample. Checkout, setup and report merging are part of elapsed build time. These are single builds on one machine, not median timings. No Cloudflare challenge interrupted these two builds. The links above work only on the local Jenkins host; [build #4 artifacts](http://127.0.0.1:8090/job/SIS2-Playwright/4/artifact/) include the merged HTML and four shard JUnit files.
+
+Jenkins Multibranch detected the branch and reached [PR #2](https://github.com/arturkultyshev/Testing_sis2/pull/2) during indexing. The scan paused on the anonymous GitHub API quota. The main badge still needs a successful build after merge. AI use is recorded in [CI-AI.md](CI-AI.md).
