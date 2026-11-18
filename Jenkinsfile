@@ -27,7 +27,7 @@ pipeline {
               node {
                 deleteDir()
                 checkout scm
-                sh 'npm ci'
+                sh 'npm ci --ignore-scripts'
                 sh 'npx playwright install --dry-run chromium'
                 try {
                   sh "bash -c 'time npx playwright test --shard=${shard}/${total}'"
